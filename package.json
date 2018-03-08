@@ -1,0 +1,42 @@
+{
+  "name": "reconform",
+  "version": "0.0.1",
+  "description": "React higher order components and utilities for easier forms.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel ./src -d ./dist"
+  },
+  "author": "Josh Ellis <iamjoshellis@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iamjoshellis/reconform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iamjoshellis/reconform/issues"
+  },
+  "homepage": "https://github.com/iamjoshellis/reconform#readme",
+  "keywords": [
+    "react",
+    "forms"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.18.2",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-react": "^7.7.0",
+    "prettier": "1.11.1"
+  },
+  "peerDependencies": {
+    "react": ">= 0.14.0 < 17.0.0-0"
+  }
+}
