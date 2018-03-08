@@ -23,7 +23,7 @@ withFields({
     ?validator: (value: String, props: Object) => Boolean | String, // default: undefined
     ?message: String, // default: ''
     ?debounce: 300 // default: undefined
-  }
+  } | (props: Object) => Object,
 }): HigherOrderComponent
 ```
 

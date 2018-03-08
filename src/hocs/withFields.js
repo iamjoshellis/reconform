@@ -2,7 +2,9 @@ import React from "react";
 
 const withFields = (config = {}) => BaseComponent =>
   class Fields extends React.Component {
-    state = Object.keys(config).reduce(
+    state = Object.keys(
+      typeof config === "function" ? config(this.props) : config
+    ).reduce(
       (prev, curr) => ({
         ...prev,
         [curr]: {
