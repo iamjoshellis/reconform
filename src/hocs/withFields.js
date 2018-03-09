@@ -2,6 +2,8 @@ import React from "react";
 
 const withFields = (config = {}) => BaseComponent =>
   class Fields extends React.Component {
+    _config = typeof config === "function" ? config(this.props) : config;
+
     state = Object.keys(this._config).reduce(
       (prev, curr) => ({
         ...prev,
@@ -16,8 +18,6 @@ const withFields = (config = {}) => BaseComponent =>
       }),
       {}
     );
-
-    _config = typeof config === "function" ? config(this.props) : config;
 
     _handleValidation = ({ name, value }) => {
       if (this._config[name] && this._config[name].validator) {
