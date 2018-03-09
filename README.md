@@ -15,8 +15,8 @@
 ### `withFields()`
 
 ```js
-withFields({
-  [fieldName: string]: {
+config: {
+  [fieldName: string]:{
     ?value: String, // default: ''
     ?focused: Boolean, // default: false
     ?touched: Boolean, // default: false
@@ -24,8 +24,12 @@ withFields({
     ?validator: (value: String, props: Object) => Boolean | String, // default: undefined
     ?message: String, // default: ''
     ?debounce: 300 // default: undefined
-  },
-} | (props: Object) => Object): HigherOrderComponent
+  }
+}
+
+withFields(
+  config | (props: Object) => config
+): HigherOrderComponent
 ```
 
 Usage example:
@@ -80,7 +84,9 @@ const Form = enhance(({ fields, fieldEventHandlers, formEventHandlers }) =>
 ### `getFieldValues()`
 
 ```js
-getFieldValues((fields: Object) => any): void
+getFieldValues(
+  (fields: Object) => any
+): void
 ```
 
 Usage example:

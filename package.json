@@ -1,7 +1,7 @@
 {
   "name": "reconform",
-  "version": "0.0.7",
-  "description": "React higher order components and utilities for easier forms.",
+  "version": "0.0.8",
+  "description": "React higher order components and utilities for easier forms. 📝",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel ./src -d ./dist"
