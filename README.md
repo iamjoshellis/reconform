@@ -53,7 +53,7 @@ const Form = enhance(({ fields, fieldEventHandlers }) =>
 
 ```js
 withSubmit(
-  (fields: Object, props: Object) => any
+  (props: Object) => any
 ): HigherOrderComponent
 ```
 

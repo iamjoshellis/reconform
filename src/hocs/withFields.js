@@ -2,26 +2,26 @@ import React from "react";
 
 const withFields = (config = {}) => BaseComponent =>
   class Fields extends React.Component {
-    state = Object.keys(
-      typeof config === "function" ? config(this.props) : config
-    ).reduce(
+    state = Object.keys(this._config).reduce(
       (prev, curr) => ({
         ...prev,
         [curr]: {
-          ...config[curr],
-          value: config[curr].value || "",
-          focused: config[curr].focused || false,
-          touched: config[curr].touched || false,
-          valid: config[curr].valid || true,
-          message: config[curr].message || ""
+          ...this._config[curr],
+          value: this._config[curr].value || "",
+          focused: this._config[curr].focused || false,
+          touched: this._config[curr].touched || false,
+          valid: this._config[curr].valid || true,
+          message: this._config[curr].message || ""
         }
       }),
       {}
     );
 
+    _config = typeof config === "function" ? config(this.props) : config;
+
     _handleValidation = ({ name, value }) => {
-      if (config[name] && config[name].validator) {
-        const validation = config[name].validator(value, this.props);
+      if (this._config[name] && this._config[name].validator) {
+        const validation = this._config[name].validator(value, this.props);
         if (this[name]) window.clearTimeout(this[name]);
         this[name] = window.setTimeout(() => {
           this.setState(prevState => ({
@@ -32,7 +32,7 @@ const withFields = (config = {}) => BaseComponent =>
               message: validation
             }
           }));
-        }, (this.state[name].valid && validation.length && config[name].debounce) || 0);
+        }, (this.state[name].valid && validation.length && this._config[name].debounce) || 0);
       }
     };
 
