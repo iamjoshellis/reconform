@@ -1,6 +1,6 @@
 {
   "name": "reconform",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "React higher order components and utilities for easier forms. 📝",
   "main": "dist/index.js",
   "scripts": {

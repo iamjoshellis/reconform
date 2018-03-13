@@ -9,6 +9,7 @@ const withFields = (config = {}) => BaseComponent =>
         ...prev,
         [curr]: {
           ...this._config[curr],
+          name: curr,
           value: this._config[curr].value || "",
           focused: this._config[curr].focused || false,
           touched: this._config[curr].touched || false,
