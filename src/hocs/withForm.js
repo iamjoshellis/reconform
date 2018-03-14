@@ -35,7 +35,10 @@ const withForm = (config = {}) => BaseComponent =>
     _handleOnSubmit = e => {
       e.preventDefault();
       if (this._config.onSubmit) {
-        this._config.onSubmit(this.props);
+        this._config.onSubmit({
+          ...this.props,
+          changeLoading: this._handleChangeLoading
+        });
       }
     };
 
