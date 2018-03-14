@@ -1,7 +1,7 @@
 import React from "react";
 import { equals } from "ramda";
 
-import { getFieldValues, checkFormValid, checkFormChanged } from "./utils";
+import { getFieldValues, checkFormValid, checkFormChanged } from "../utils";
 
 const withForm = (config = {}) => BaseComponent =>
   class Form extends React.Component {
