@@ -1,6 +1,6 @@
 {
   "name": "reconform",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "React higher order components and utilities for easier forms. 📝",
   "main": "dist/index.js",
   "scripts": {
@@ -18,7 +18,9 @@
   "homepage": "https://github.com/iamjoshellis/reconform#readme",
   "keywords": [
     "react",
-    "forms"
+    "forms",
+    "form",
+    "higher-order-component"
   ],
   "devDependencies": {
     "babel-cli": "^6.26.0",
