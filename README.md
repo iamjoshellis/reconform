@@ -26,7 +26,7 @@ config: {
     ?touched: Boolean, // default: false
     ?changed: Boolean, // default: false
     ?valid: Boolean, // default: true
-    ?debounce: 300 // default: undefined
+    ?debounce: Number // default: undefined
     ?validator: (value: String, props: Object) => Boolean | String, // default: undefined
   }
 }
