@@ -6,9 +6,11 @@
 
 * [Higher order components](#higher-order-components)
   + [`withFields()`](#withfields)
-  + [`withSubmit()`](#withsubmit)
+  + [`withForm()`](#withform)
 * [utils](#utils)
   + [`getFieldValues()`](#getfieldvalues)
+  + [`checkFormValid()`](#checkFormValid)
+  + [`checkFormChanged()`](#checkFormChanged)
 
 ## Higher order components
 
@@ -16,14 +18,16 @@
 
 ```js
 config: {
-  [fieldName: string]:{
-    ?value: String, // default: ''
+  [fieldName: String]: {
+    ?name: String // default: fieldName
+    ?value: String | Array, // default: ''
+    ?message: String, // default: ''
     ?focused: Boolean, // default: false
     ?touched: Boolean, // default: false
+    ?changed: Boolean, // default: false
     ?valid: Boolean, // default: true
-    ?validator: (value: String, props: Object) => Boolean | String, // default: undefined
-    ?message: String, // default: ''
     ?debounce: 300 // default: undefined
+    ?validator: (value: String, props: Object) => Boolean | String, // default: undefined
   }
 }
 
@@ -46,35 +50,50 @@ const Form = enhance(({ fields, fieldEventHandlers }) =>
   <form>
     <label>
       <span>username</span>
-      <input name="username" value={fields.username.value} {...fieldEventHandlers} />
+      <input name={fields.username.name} value={fields.username.value} {...fieldEventHandlers} />
     </label>
-    {!fields.username.valid && <p>{fields.username.message}</p>}
+    {fields.username.touched && !fields.username.valid && <p>{fields.username.message}</p>}
   </form>
 )
 ```
 
-### `withSubmit()`
+### `withForm()`
 
 ```js
-withSubmit(
-  (props: Object) => any
+config: {
+  loading: Boolean, // default: false
+  onSubmit: (props: Object) => any // default: undefined
+}
+
+withFields(
+  config | (props: Object) => config
 ): HigherOrderComponent
 ```
 
 Usage example:
 
 ```js
-const enhance = withSubmit(props => {
-  props.submit(props.fields);
+const enhance = withForm({
+  onSubmit: (props) => {
+    props.changeLoading(true);
+    someHandler(props.form.values)
+      .then(() => {
+        props.changeLoading(false);
+      })
+      .catch(() => {
+        props.changeLoading(false);
+      })
+  }
 });
 
-const Form = enhance(({ fields, fieldEventHandlers, formEventHandlers }) =>
-  <form {...formEventHandlers}>
+const Form = enhance(({ fields, fieldEventHandlers, form, onSubmit }) =>
+  <formn disabled={form.loading || !form.valid || !form.changed} onSubmit={onSubmit}>
     <label>
       <span>username</span>
-      <input name="username" value={fields.username.value} {...fieldEventHandlers} />
+      <input name={fields.username.name} value={fields.username.value} {...fieldEventHandlers} />
     </label>
-    {!fields.username.valid && <p>{fields.username.message}</p>}
+    {fields.username.touched && !fields.username.valid && <p>{fields.username.message}</p>}
+    <button>submit</button>
   </form>
 )
 ```
@@ -84,15 +103,19 @@ const Form = enhance(({ fields, fieldEventHandlers, formEventHandlers }) =>
 ### `getFieldValues()`
 
 ```js
-getFieldValues(
-  (fields: Object) => any
-): void
+getFieldValues(fields: Object) => ({
+  [fieldName: String]: String
+})
 ```
 
-Usage example:
+### `checkFormValid()`
 
 ```js
-const enhance = withSubmit(props => {
-  props.submit(getFieldValues(props.fields));
-});
+checkFormValid(fields: Object) => Boolean
+```
+
+### `checkFormChanged()`
+
+```js
+checkFormChanged(fields: Object) => Boolean
 ```

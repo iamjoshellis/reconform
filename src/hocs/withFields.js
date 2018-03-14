@@ -8,13 +8,14 @@ const withFields = (config = {}) => BaseComponent =>
       (prev, curr) => ({
         ...prev,
         [curr]: {
-          ...this._config[curr],
-          name: curr,
+          name: this._config[curr].name || curr,
           value: this._config[curr].value || "",
+          message: this._config[curr].message || "",
           focused: this._config[curr].focused || false,
           touched: this._config[curr].touched || false,
+          changed: this._config[curr].changed || false,
           valid: this._config[curr].valid || true,
-          message: this._config[curr].message || ""
+          ...this._config[curr]
         }
       }),
       {}
@@ -39,22 +40,26 @@ const withFields = (config = {}) => BaseComponent =>
 
     _handleFieldChange = e => {
       const { name, value, type } = e.target;
-      this.setState(prevState => ({
-        [name]: {
-          ...prevState[name],
-          touched: true,
-          value:
-            type === "checkbox"
-              ? prevState[name] &&
-                prevState[name].value &&
-                Array.isArray(prevState[name].value)
-                ? prevState[name].value.includes(value)
-                  ? prevState[name].value.filter(item => item !== value)
-                  : [...prevState[name].value, value]
-                : [value]
-              : value
-        }
-      }));
+      this.setState(prevState => {
+        const newValue =
+          type === "checkbox"
+            ? prevState[name] &&
+              prevState[name].value &&
+              Array.isArray(prevState[name].value)
+              ? prevState[name].value.includes(value)
+                ? prevState[name].value.filter(item => item !== value)
+                : [...prevState[name].value, value]
+              : [value]
+            : value;
+        return {
+          [name]: {
+            ...prevState[name],
+            touched: true,
+            value: newValue,
+            changed: newValue !== this._config[name].value
+          }
+        };
+      });
       this._handleValidation({ name, value });
     };
 

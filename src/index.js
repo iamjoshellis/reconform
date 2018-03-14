@@ -1,13 +1,15 @@
 import withFields from "./hocs/withFields";
-import withSubmit from "./hocs/withSubmit";
-import getFieldKeyValues from "./utils/getFieldKeyValues";
+import withForm from "./hocs/withForm";
+import { getFieldValues, checkFormValid, checkFormChanged } from "./utils";
 
 export { default as withFields } from "./hocs/withFields";
-export { default as withSubmit } from "./hocs/withSubmit";
-export { default as getFieldKeyValues } from "./utils/getFieldKeyValues";
+export { default as withForm } from "./hocs/withForm";
+export { getFieldValues, checkFormValid, checkFormChanged } from "./utils";
 
 export default {
   withFields,
-  withSubmit,
-  getFieldKeyValues
+  withForm,
+  getFieldValues,
+  checkFormValid,
+  checkFormChanged
 };
