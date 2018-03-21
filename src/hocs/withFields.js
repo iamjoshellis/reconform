@@ -30,7 +30,7 @@ const withFields = (config = {}) => BaseComponent =>
             ...prevState,
             [name]: {
               ...prevState[name],
-              valid: !validation.length,
+              valid: validation !== false,
               message: validation
             }
           }));
