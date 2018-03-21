@@ -87,7 +87,7 @@ const enhance = withForm({
 });
 
 const Form = enhance(({ fields, fieldEventHandlers, form, onSubmit }) =>
-  <formn disabled={form.loading || !form.valid || !form.changed} onSubmit={onSubmit}>
+  <form disabled={form.loading || !form.valid || !form.changed} onSubmit={onSubmit}>
     <label>
       <span>username</span>
       <input name={fields.username.name} value={fields.username.value} {...fieldEventHandlers} />
