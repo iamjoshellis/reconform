@@ -30,7 +30,7 @@ const withFields = (config = {}) => BaseComponent =>
             ...prevState,
             [name]: {
               ...prevState[name],
-              valid: validation !== false,
+              valid: validation != false, // eslint-disable-line eqeqeq
               message: validation
             }
           }));
