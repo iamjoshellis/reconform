@@ -34,7 +34,7 @@ const withFields = (config = {}) => BaseComponent =>
               message: validation
             }
           }));
-        }, (this.state[name].valid && validation.length && this._config[name].debounce) || 0);
+        }, (this.state[name].valid && validation != false && this._config[name].debounce) || 0); // eslint-disable-line eqeqeq
       }
     };
 
@@ -64,17 +64,19 @@ const withFields = (config = {}) => BaseComponent =>
     };
 
     _handleFieldFocus = e => {
-      const { name } = e.target;
+      const { name, value } = e.target;
       this.setState(prevState => ({
         [name]: { ...prevState[name], focused: true }
       }));
+      this._handleValidation({ name, value });
     };
 
     _handleFieldBlur = e => {
-      const { name } = e.target;
+      const { name, value } = e.target;
       this.setState(prevState => ({
         [name]: { ...prevState[name], focused: false, touched: true }
       }));
+      this._handleValidation({ name, value });
     };
 
     render = () => (

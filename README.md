@@ -21,13 +21,13 @@ config: {
   [fieldName: String]: {
     ?name: String // default: fieldName
     ?value: String | Array, // default: ''
-    ?message: String, // default: ''
+    ?message: Node, // default: ''
     ?focused: Boolean, // default: false
     ?touched: Boolean, // default: false
     ?changed: Boolean, // default: false
     ?valid: Boolean, // default: true
     ?debounce: Number // default: undefined
-    ?validator: (value: String, props: Object) => Boolean | String, // default: undefined
+    ?validator: (value: String, props: Object) => Boolean | Node, // default: undefined
   }
 }
 
