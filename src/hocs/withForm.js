@@ -1,5 +1,5 @@
 import React from "react";
-import { equals } from "ramda";
+import isEqual from "lodash.isequal";
 
 import { getFieldValues, checkFormValid, checkFormChanged } from "../utils";
 
@@ -19,7 +19,7 @@ const withForm = (config = {}) => BaseComponent =>
     };
 
     componentWillReceiveProps(nextProps) {
-      if (!equals(this.props.fields, nextProps.fields)) {
+      if (!isEqual(this.props.fields, nextProps.fields)) {
         this.setState(() => ({
           valid: checkFormValid(nextProps.fields),
           changed: checkFormChanged(nextProps.fields),

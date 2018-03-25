@@ -1,6 +1,6 @@
 {
   "name": "reconform",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "React higher order components and utilities for easier forms. 📝",
   "main": "dist/index.js",
   "scripts": {
@@ -41,6 +41,6 @@
     "react": ">= 0.14.0 < 17.0.0-0"
   },
   "dependencies": {
-    "ramda": "^0.25.0"
+    "lodash.isequal": "^4.5.0"
   }
 }
