@@ -1,25 +1,28 @@
 import React from "react";
 
+const setIntialState = config =>
+  Object.keys(config).reduce(
+    (prev, curr) => ({
+      ...prev,
+      [curr]: {
+        name: config[curr].name || curr,
+        value: config[curr].value || "",
+        message: config[curr].message || "",
+        focused: config[curr].focused || false,
+        touched: config[curr].touched || false,
+        changed: config[curr].changed || false,
+        valid: config[curr].valid || true,
+        ...config[curr]
+      }
+    }),
+    {}
+  );
+
 const withFields = (config = {}) => BaseComponent =>
   class Fields extends React.Component {
     _config = typeof config === "function" ? config(this.props) : config;
 
-    state = Object.keys(this._config).reduce(
-      (prev, curr) => ({
-        ...prev,
-        [curr]: {
-          name: this._config[curr].name || curr,
-          value: this._config[curr].value || "",
-          message: this._config[curr].message || "",
-          focused: this._config[curr].focused || false,
-          touched: this._config[curr].touched || false,
-          changed: this._config[curr].changed || false,
-          valid: this._config[curr].valid || true,
-          ...this._config[curr]
-        }
-      }),
-      {}
-    );
+    state = setIntialState(this._config);
 
     _handleValidation = ({ name, value }) => {
       if (this._config[name] && this._config[name].validator) {
@@ -79,6 +82,10 @@ const withFields = (config = {}) => BaseComponent =>
       this._handleValidation({ name, value });
     };
 
+    _resetFields = () => {
+      this.setState(() => setIntialState(this._config));
+    };
+
     render = () => (
       <BaseComponent
         fields={this.state}
@@ -87,6 +94,7 @@ const withFields = (config = {}) => BaseComponent =>
           onFocus: this._handleFieldFocus,
           onBlur: this._handleFieldBlur
         }}
+        resetFields={this._resetFields}
         {...this.props}
       />
     );
