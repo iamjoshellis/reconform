@@ -37,7 +37,8 @@ const withForm = (config = {}) => BaseComponent =>
       if (this._config.onSubmit) {
         this._config.onSubmit({
           ...this.props,
-          changeLoading: this._handleChangeLoading
+          changeLoading: this._handleChangeLoading,
+          form: this.state
         });
       }
     };
