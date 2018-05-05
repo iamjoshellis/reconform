@@ -12,3 +12,9 @@ export const checkFormValid = fields =>
 
 export const checkFormChanged = fields =>
   Object.keys(fields).some(field => fields[field].changed);
+
+export const isFunction = obj => typeof obj === "function";
+
+export const isObject = obj => obj !== null && typeof obj === "object";
+
+export const isPromise = value => isObject(value) && isFunction(value.then);
