@@ -13,8 +13,8 @@ const withForm = (config = {}) => BaseComponent =>
 
     state = {
       loading: this._config.loading || false,
-      valid: checkFormValid(this.props.fields),
-      changed: checkFormChanged(this.props.fields),
+      valid: this._config.valid || checkFormValid(this.props.fields),
+      changed: this._config.changed || checkFormChanged(this.props.fields),
       values: getFieldValues(this.props.fields)
     };
 
@@ -35,11 +35,16 @@ const withForm = (config = {}) => BaseComponent =>
     _handleOnSubmit = e => {
       e.preventDefault();
       if (this._config.onSubmit) {
-        this._config.onSubmit({
-          ...this.props,
-          changeLoading: this._handleChangeLoading,
-          form: this.state
-        });
+        this._handleChangeLoading(true);
+        try {
+          this._config.onSubmit({
+            ...this.props,
+            form: this.state
+          });
+          this._handleChangeLoading(false);
+        } catch (error) {
+          this._handleChangeLoading(false);
+        }
       }
     };
 
