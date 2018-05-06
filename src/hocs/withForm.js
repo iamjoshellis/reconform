@@ -1,12 +1,7 @@
 import React from "react";
 import isEqual from "lodash.isequal";
 
-import {
-  getFieldValues,
-  checkFormValid,
-  checkFormChanged,
-  isPromise
-} from "../utils";
+import { getFieldValues, checkFormValid, checkFormChanged } from "../utils";
 
 const withForm = (config = {}) => BaseComponent =>
   class Form extends React.Component {
@@ -40,22 +35,15 @@ const withForm = (config = {}) => BaseComponent =>
     _handleOnSubmit = async e => {
       e.preventDefault();
       if (this._config.onSubmit) {
-        if (isPromise(this._config.onSubmit)) {
-          this._handleChangeLoading(true);
-          try {
-            await this._config.onSubmit({
-              ...this.props,
-              form: this.state
-            });
-            this._handleChangeLoading(false);
-          } catch (error) {
-            this._handleChangeLoading(false);
-          }
-        } else {
-          this._config.onSubmit({
+        this._handleChangeLoading(true);
+        try {
+          await this._config.onSubmit({
             ...this.props,
             form: this.state
           });
+          this._handleChangeLoading(false);
+        } catch (error) {
+          this._handleChangeLoading(false);
         }
       }
     };
