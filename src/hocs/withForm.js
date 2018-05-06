@@ -33,7 +33,9 @@ const withForm = (config = {}) => BaseComponent =>
     };
 
     _handleOnSubmit = async e => {
-      e.preventDefault();
+      if (e && e.preventDefault && typeof e.preventDefault === "function") {
+        e.preventDefault();
+      }
       if (this._config.onSubmit) {
         this._handleChangeLoading(true);
         try {
