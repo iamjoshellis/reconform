@@ -24,20 +24,16 @@ const withFields = (config = {}) => BaseComponent =>
 
     state = setIntialState(this._config);
 
-    _handleValidation = ({ name, value }) => {
+    _handleValidation = async ({ name, value }) => {
       if (this._config[name] && this._config[name].validator) {
         const validation = this._config[name].validator(value, this.props);
-        if (this[name]) window.clearTimeout(this[name]);
-        this[name] = window.setTimeout(() => {
-          this.setState(prevState => ({
-            ...prevState,
-            [name]: {
-              ...prevState[name],
-              valid: validation == false, // eslint-disable-line eqeqeq
-              message: validation || prevState[name].message
-            }
-          }));
-        }, (this.state[name].valid && validation != false && this._config[name].debounce) || 0); // eslint-disable-line eqeqeq
+        await this.setState(prevState => ({
+          [name]: {
+            ...prevState[name],
+            valid: validation == false, // eslint-disable-line eqeqeq
+            message: validation || prevState[name].message
+          }
+        }));
       }
     };
 

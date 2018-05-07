@@ -26,7 +26,6 @@ config: {
     ?touched: Boolean, // default: false
     ?changed: Boolean, // default: false
     ?valid: Boolean, // default: true
-    ?debounce: Number // default: undefined
     ?validator: (value: String, props: Object) => Boolean | Node, // default: undefined
   }
 }
@@ -42,7 +41,6 @@ Usage example:
 const enhance = withFields({
   username: {
     validator: (value, props) => value.length > 12 && 'Too Long Amigo',
-    debounce: 300
   }
 });
 
