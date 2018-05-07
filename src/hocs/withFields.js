@@ -26,8 +26,11 @@ const withFields = (config = {}) => BaseComponent =>
 
     _handleValidation = async ({ name, value }) => {
       if (this._config[name] && this._config[name].validator) {
-        const validation = this._config[name].validator(value, this.props);
-        await this.setState(prevState => ({
+        const validation = await this._config[name].validator(
+          value,
+          this.props
+        );
+        this.setState(prevState => ({
           [name]: {
             ...prevState[name],
             valid: validation == false, // eslint-disable-line eqeqeq
