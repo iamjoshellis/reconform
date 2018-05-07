@@ -7,10 +7,6 @@
 * [Higher order components](#higher-order-components)
   + [`withFields()`](#withfields)
   + [`withForm()`](#withform)
-* [utils](#utils)
-  + [`getFieldValues()`](#getfieldvalues)
-  + [`checkFormValid()`](#checkFormValid)
-  + [`checkFormChanged()`](#checkFormChanged)
 
 ## Higher order components
 
@@ -72,48 +68,19 @@ Usage example:
 
 ```js
 const enhance = withForm({
-  onSubmit: (props) => {
-    props.changeLoading(true);
-    someHandler(props.form.values)
-      .then(() => {
-        props.changeLoading(false);
-      })
-      .catch(() => {
-        props.changeLoading(false);
-      })
+  onSubmit: async (props) => {
+    await props.someHandler(props.form.values);
   }
 });
 
 const Form = enhance(({ fields, fieldEventHandlers, form, onSubmit }) =>
-  <form disabled={form.loading || !form.valid || !form.changed} onSubmit={onSubmit}>
+  <form onSubmit={onSubmit}>
     <label>
-      <span>username</span>
+      <span>Username</span>
       <input name={fields.username.name} value={fields.username.value} {...fieldEventHandlers} />
     </label>
     {fields.username.touched && !fields.username.valid && <p>{fields.username.message}</p>}
-    <button>submit</button>
+    <button disabled={form.loading || !form.valid || !form.changed}>Submit</button>
   </form>
 )
-```
-
-## Utils
-
-### `getFieldValues()`
-
-```js
-getFieldValues(fields: Object) => ({
-  [fieldName: String]: String
-})
-```
-
-### `checkFormValid()`
-
-```js
-checkFormValid(fields: Object) => Boolean
-```
-
-### `checkFormChanged()`
-
-```js
-checkFormChanged(fields: Object) => Boolean
 ```
