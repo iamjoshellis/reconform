@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import withFields from "./hocs/withFields";
 import withForm from "./hocs/withForm";
 
