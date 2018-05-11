@@ -1,6 +1,6 @@
 {
   "name": "reconform",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "React higher order components and utilities for easier forms. 📝",
   "main": "dist/index.js",
   "scripts": {
@@ -38,7 +38,8 @@
     "prettier": "1.11.1"
   },
   "peerDependencies": {
-    "react": ">= 0.14.0 < 17.0.0-0"
+    "react": ">= 0.14.0 < 17.0.0-0",
+    "babel-polyfill": ">= 6.0.0"
   },
   "dependencies": {
     "lodash.isequal": "^4.5.0"
