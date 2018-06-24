@@ -1,6 +1,6 @@
 import React from "react";
 
-const setIntialState = config =>
+const setIntialState = (config, props) =>
   Object.keys(config).reduce(
     (prev, curr) => ({
       ...prev,
@@ -11,7 +11,10 @@ const setIntialState = config =>
         focused: config[curr].focused || false,
         touched: config[curr].touched || false,
         changed: config[curr].changed || false,
-        valid: config[curr].valid || true,
+        valid:
+          (config[curr].validator &&
+            config[curr].validator(config[curr].value || "", props)) ||
+          true,
         ...config[curr]
       }
     }),
@@ -22,7 +25,7 @@ const withFields = (config = {}) => BaseComponent =>
   class Fields extends React.Component {
     _config = typeof config === "function" ? config(this.props) : config;
 
-    state = setIntialState(this._config);
+    state = setIntialState(this._config, this.props);
 
     _handleValidation = async ({ name, value }) => {
       if (this._config[name] && this._config[name].validator) {
