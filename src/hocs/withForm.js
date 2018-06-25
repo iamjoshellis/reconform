@@ -29,16 +29,23 @@ const withFields = (config = {}) => BaseComponent =>
     state = setIntialState(this._config);
 
     _handleValidation = async ({ name, value }) => {
-      if (this._config[name] && this._config[name].validator) {
+      if (
+        this._config.fields &&
+        this._config.fields[name] &&
+        this._config.fields[name].validator
+      ) {
         const validation = await this._config[name].validator(
           value,
           this.props
         );
         this.setState(prevState => ({
-          [name]: {
-            ...prevState[name],
-            valid: validation == false, // eslint-disable-line eqeqeq
-            message: validation || prevState[name].message
+          fields: {
+            ...prevState.fields,
+            [name]: {
+              ...prevState[name],
+              valid: validation == false, // eslint-disable-line eqeqeq
+              message: validation || prevState[name].message
+            }
           }
         }));
       }
@@ -58,11 +65,14 @@ const withFields = (config = {}) => BaseComponent =>
               : [value]
             : value;
         return {
-          [name]: {
-            ...prevState[name],
-            touched: true,
-            value: newValue,
-            dirty: newValue !== this._config.fields[name].value
+          fields: {
+            ...prevState.fields,
+            [name]: {
+              ...prevState[name],
+              touched: true,
+              value: newValue,
+              dirty: newValue !== this._config.fields[name].value
+            }
           }
         };
       });
@@ -72,7 +82,10 @@ const withFields = (config = {}) => BaseComponent =>
     _handleFieldFocus = e => {
       const { name, value } = e.target;
       this.setState(prevState => ({
-        [name]: { ...prevState[name], focused: true }
+        fields: {
+          ...prevState.fields,
+          [name]: { ...prevState[name], focused: true }
+        }
       }));
       this._handleValidation({ name, value });
     };
@@ -80,7 +93,10 @@ const withFields = (config = {}) => BaseComponent =>
     _handleFieldBlur = e => {
       const { name, value } = e.target;
       this.setState(prevState => ({
-        [name]: { ...prevState[name], focused: false, touched: true }
+        fields: {
+          ...prevState.fields,
+          [name]: { ...prevState[name], focused: false, touched: true }
+        }
       }));
       this._handleValidation({ name, value });
     };
@@ -100,13 +116,14 @@ const withFields = (config = {}) => BaseComponent =>
       if (this._config.onSubmit) {
         this._handleChangeSubmitting(true);
         try {
-          await this._config.onSubmit(
-            getFieldValues(this.props.fields),
-            ...this.props
-          );
+          await this._config.onSubmit(getFieldValues(this.props.fields), {
+            ...this.props,
+            ...this.state
+          });
           this._handleChangeSubmitting(false);
         } catch (error) {
           this._handleChangeSubmitting(false);
+          throw error;
         }
       }
     };
