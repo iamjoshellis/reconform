@@ -113,7 +113,7 @@ const withFields = (config = {}) => BaseComponent =>
 
     render = () => (
       <BaseComponent
-        fields={this.state}
+        fields={this.state.fields}
         fieldEventHandlers={{
           onChange: this._handleFieldChange,
           onFocus: this._handleFieldFocus,
