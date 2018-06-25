@@ -8,54 +8,25 @@
   + [`withFields()`](#withfields)
   + [`withForm()`](#withform)
 
-## Higher order components
-
-### `withFields()`
-
-```js
-config: {
-  [fieldName: String]: {
-    ?name: String // default: fieldName
-    ?value: String | Array, // default: ''
-    ?message: Node, // default: ''
-    ?focused: Boolean, // default: false
-    ?touched: Boolean, // default: false
-    ?changed: Boolean, // default: false
-    ?valid: Boolean, // default: true
-    ?validator: (value: String, props: Object) => Boolean | Node, // default: undefined
-  }
-}
-
-withFields(
-  config | (props: Object) => config
-): HigherOrderComponent
-```
-
-Usage example:
-
-```js
-const enhance = withFields({
-  username: {
-    validator: (value, props) => value.length > 12 && 'Too Long Amigo',
-  }
-});
-
-const Form = enhance(({ fields, fieldEventHandlers }) =>
-  <form>
-    <label>
-      <span>username</span>
-      <input name={fields.username.name} value={fields.username.value} {...fieldEventHandlers} />
-    </label>
-    {fields.username.touched && !fields.username.valid && <p>{fields.username.message}</p>}
-  </form>
-)
-```
+## Higher order component
 
 ### `withForm()`
 
 ```js
 config: {
-  loading: Boolean, // default: false
+  fields: {
+    [fieldName: String]: {
+      ?name: String // default: fieldName
+      ?value: String | Array, // default: ''
+      ?message: Node, // default: ''
+      ?focused: Boolean, // default: false
+      ?touched: Boolean, // default: false
+      ?dirty: Boolean, // default: false
+      ?valid: Boolean, // default: !Boolean(validator)
+      ?validator: (value: String, props: Object) => Boolean | Node, // default: undefined
+    }
+  },
+  submitting: Boolean, // default: false,
   onSubmit: (props: Object) => any // default: undefined
 }
 
@@ -68,19 +39,24 @@ Usage example:
 
 ```js
 const enhance = withForm({
+  fields: {
+    username: {
+      validator: (value, props) => value.length > 12 && 'Too Long Amigo',
+    }
+  }
   onSubmit: async (props) => {
     await props.someHandler(props.form.values);
   }
 });
 
-const Form = enhance(({ fields, fieldEventHandlers, form, onSubmit }) =>
+const Form = enhance(({ fields, submitting, fieldEventHandlers, onSubmit }) =>
   <form onSubmit={onSubmit}>
     <label>
       <span>Username</span>
       <input name={fields.username.name} value={fields.username.value} {...fieldEventHandlers} />
     </label>
     {fields.username.touched && !fields.username.valid && <p>{fields.username.message}</p>}
-    <button disabled={form.loading || !form.valid || !form.changed}>Submit</button>
+    <button disabled={submitting}>Submit</button>
   </form>
 )
 ```

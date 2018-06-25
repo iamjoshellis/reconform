@@ -6,9 +6,3 @@ export const getFieldValues = fields =>
     }),
     {}
   );
-
-export const checkFormValid = fields =>
-  Object.keys(fields).every(field => fields[field].valid);
-
-export const checkFormChanged = fields =>
-  Object.keys(fields).some(field => fields[field].changed);
