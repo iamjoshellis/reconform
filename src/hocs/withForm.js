@@ -29,12 +29,8 @@ const withFields = (config = {}) => BaseComponent =>
     state = setIntialState(this._config);
 
     _handleValidation = async ({ name, value }) => {
-      if (
-        this._config.fields &&
-        this._config.fields[name] &&
-        this._config.fields[name].validator
-      ) {
-        const validation = await this._config[name].validator(
+      if (this._config.fields[name] && this._config.fields[name].validator) {
+        const validation = await this._config.fields[name].validator(
           value,
           this.props
         );
@@ -42,9 +38,9 @@ const withFields = (config = {}) => BaseComponent =>
           fields: {
             ...prevState.fields,
             [name]: {
-              ...prevState[name],
+              ...prevState.fields[name],
               valid: validation == false, // eslint-disable-line eqeqeq
-              message: validation || prevState[name].message
+              message: validation || prevState.fields[name].message
             }
           }
         }));
@@ -56,19 +52,19 @@ const withFields = (config = {}) => BaseComponent =>
       this.setState(prevState => {
         const newValue =
           type === "checkbox"
-            ? prevState[name] &&
-              prevState[name].value &&
-              Array.isArray(prevState[name].value)
-              ? prevState[name].value.includes(value)
-                ? prevState[name].value.filter(item => item !== value)
-                : [...prevState[name].value, value]
+            ? prevState.fields[name] &&
+              prevState.fields[name].value &&
+              Array.isArray(prevState.fields[name].value)
+              ? prevState.fields[name].value.includes(value)
+                ? prevState.fields[name].value.filter(item => item !== value)
+                : [...prevState.fields[name].value, value]
               : [value]
             : value;
         return {
           fields: {
             ...prevState.fields,
             [name]: {
-              ...prevState[name],
+              ...prevState.fields[name],
               touched: true,
               value: newValue,
               dirty: newValue !== this._config.fields[name].value
@@ -84,7 +80,7 @@ const withFields = (config = {}) => BaseComponent =>
       this.setState(prevState => ({
         fields: {
           ...prevState.fields,
-          [name]: { ...prevState[name], focused: true }
+          [name]: { ...prevState.fields[name], focused: true }
         }
       }));
       this._handleValidation({ name, value });
@@ -95,7 +91,7 @@ const withFields = (config = {}) => BaseComponent =>
       this.setState(prevState => ({
         fields: {
           ...prevState.fields,
-          [name]: { ...prevState[name], focused: false, touched: true }
+          [name]: { ...prevState.fields[name], focused: false, touched: true }
         }
       }));
       this._handleValidation({ name, value });
