@@ -112,7 +112,7 @@ const withFields = (config = {}) => BaseComponent =>
       if (this._config.onSubmit) {
         this._handleChangeSubmitting(true);
         try {
-          await this._config.onSubmit(getFieldValues(this.props.fields), {
+          await this._config.onSubmit(getFieldValues(this.state.fields), {
             ...this.props,
             ...this.state
           });
