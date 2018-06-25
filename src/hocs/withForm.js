@@ -133,6 +133,7 @@ const withFields = (config = {}) => BaseComponent =>
           onBlur: this._handleFieldBlur
         }}
         resetForm={this._resetForm}
+        submitting={this.state.submitting}
         onSubmit={this._handleOnSubmit}
         changeSubmitting={this._handleChangeSubmitting}
         {...this.props}
