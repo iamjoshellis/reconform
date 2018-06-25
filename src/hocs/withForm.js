@@ -62,7 +62,7 @@ const withFields = (config = {}) => BaseComponent =>
             ...prevState[name],
             touched: true,
             value: newValue,
-            dirty: newValue !== this._config[name].value
+            dirty: newValue !== this._config.fields[name].value
           }
         };
       });
