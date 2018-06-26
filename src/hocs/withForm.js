@@ -48,17 +48,15 @@ const withFields = (config = {}) => BaseComponent =>
     };
 
     _handleFieldChange = e => {
-      const { name, value, type } = e.target;
+      const { name, value } = e.target;
       this.setState(prevState => {
         const newValue =
-          type === "checkbox"
-            ? prevState.fields[name] &&
-              prevState.fields[name].value &&
-              Array.isArray(prevState.fields[name].value)
-              ? prevState.fields[name].value.includes(value)
-                ? prevState.fields[name].value.filter(item => item !== value)
-                : [...prevState.fields[name].value, value]
-              : [value]
+          prevState.fields[name] &&
+          prevState.fields[name].value &&
+          Array.isArray(prevState.fields[name].value)
+            ? prevState.fields[name].value.includes(value)
+              ? prevState.fields[name].value.filter(item => item !== value)
+              : [...prevState.fields[name].value, value]
             : value;
         return {
           fields: {
