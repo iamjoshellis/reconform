@@ -30,10 +30,10 @@ const withFields = (config = {}) => BaseComponent =>
 
     _handleValidation = async ({ name, value }) => {
       if (this._config.fields[name] && this._config.fields[name].validator) {
-        const validation = await this._config.fields[name].validator(
-          value,
-          this.props
-        );
+        const validation = await this._config.fields[name].validator(value, {
+          ...this.props,
+          ...this.state
+        });
         this.setState(prevState => ({
           fields: {
             ...prevState.fields,
