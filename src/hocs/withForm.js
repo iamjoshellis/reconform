@@ -111,6 +111,7 @@ const withFields = (config = {}) => BaseComponent =>
         this._handleChangeSubmitting(true);
         try {
           await this._config.onSubmit(getFieldValues(this.state.fields), {
+            resetForm: this._resetForm,
             ...this.props,
             ...this.state
           });
