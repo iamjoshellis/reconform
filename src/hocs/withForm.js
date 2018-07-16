@@ -95,8 +95,8 @@ const withFields = (config = {}) => BaseComponent =>
       this._handleValidation({ name, value });
     };
 
-    _resetForm = () => {
-      this.setState(() => setIntialState(this._config));
+    _resetForm = newConfig => {
+      this.setState(() => setIntialState(newConfig || this._config));
     };
 
     _handleChangeSubmitting = submitting => {
