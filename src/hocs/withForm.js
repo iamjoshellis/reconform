@@ -12,7 +12,7 @@ const setIntialState = config => ({
         message: config.fields[curr].message || "",
         focused: config.fields[curr].focused || false,
         touched: config.fields[curr].touched || false,
-        dirty: config.fields[curr].dirty || false,
+        changed: config.fields[curr].changed || false,
         valid: !config.fields[curr].validator,
         ...config.fields[curr]
       }
@@ -48,16 +48,28 @@ const withFields = (config = {}) => BaseComponent =>
     };
 
     _handleFieldChange = e => {
-      const { name, value } = e.target;
+      const { name, value, type } = e.target;
       this.setState(prevState => {
-        const newValue =
-          prevState.fields[name] &&
-          prevState.fields[name].value &&
-          Array.isArray(prevState.fields[name].value)
-            ? prevState.fields[name].value.includes(value)
-              ? prevState.fields[name].value.filter(item => item !== value)
-              : [...prevState.fields[name].value, value]
-            : value;
+        if (type === "checkbox") {
+          return {
+            fields: {
+              ...prevState.fields,
+              [name]: {
+                ...prevState.fields[name],
+                touched: true,
+                checked: !prevState.fields[name].checked,
+                changed:
+                  !prevState.fields[name].checked !==
+                  this._config.fields[name].checked
+              }
+            }
+          };
+        }
+        const newValue = Array.isArray(prevState.fields[name].value)
+          ? prevState.fields[name].value.includes(value)
+            ? prevState.fields[name].value.filter(item => item !== value)
+            : [...prevState.fields[name].value, value]
+          : value;
         return {
           fields: {
             ...prevState.fields,
@@ -65,7 +77,7 @@ const withFields = (config = {}) => BaseComponent =>
               ...prevState.fields[name],
               touched: true,
               value: newValue,
-              dirty: newValue !== this._config.fields[name].value
+              changed: newValue !== this._config.fields[name].value
             }
           }
         };
