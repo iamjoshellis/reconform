@@ -1,8 +1,13 @@
 export const getFieldValues = fields =>
-  Object.keys(fields).reduce(
-    (prev, curr) => ({
+  Object.keys(fields).reduce((prev, curr) => {
+    if (fields[curr].type === "checkbox") {
+      return {
+        ...prev,
+        [fields[curr].value || curr]: fields[curr].checked
+      };
+    }
+    return {
       ...prev,
       [curr]: fields[curr].value
-    }),
-    {}
-  );
+    };
+  }, {});
