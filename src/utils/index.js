@@ -3,7 +3,7 @@ export const getFieldValues = fields =>
     if (fields[curr].type === "checkbox") {
       return {
         ...prev,
-        [fields[curr].value || curr]: fields[curr].checked
+        [fields[curr].value || curr]: fields[curr].checked || false
       };
     }
     return {
