@@ -3,22 +3,24 @@ import React from "react";
 import { getFieldValues } from "../utils";
 
 const setIntialState = config => ({
-  fields: Object.keys(config.fields).reduce(
-    (prev, curr) => ({
-      ...prev,
-      [curr]: {
-        name: config.fields[curr].name || curr,
-        value: config.fields[curr].value || "",
-        message: config.fields[curr].message || "",
-        focused: config.fields[curr].focused || false,
-        touched: config.fields[curr].touched || false,
-        changed: config.fields[curr].changed || false,
-        valid: !config.fields[curr].validator,
-        ...config.fields[curr]
-      }
-    }),
-    {}
-  ),
+  fields:
+    config.fields &&
+    Object.keys(config.fields).reduce(
+      (prev, curr) => ({
+        ...prev,
+        [curr]: {
+          name: config.fields[curr].name || curr,
+          value: config.fields[curr].value || "",
+          message: config.fields[curr].message || "",
+          focused: config.fields[curr].focused || false,
+          touched: config.fields[curr].touched || false,
+          changed: config.fields[curr].changed || false,
+          valid: !config.fields[curr].validator,
+          ...config.fields[curr]
+        }
+      }),
+      {}
+    ),
   submitting: config.submitting || false
 });
 
@@ -49,8 +51,12 @@ const withFields = (config = {}) => BaseComponent =>
 
     _handleFieldChange = e => {
       const { name, value, type } = e.target;
-      this.setState(prevState => {
-        if (type === "checkbox") {
+      if (type === "checkbox") {
+        this.setState(prevState => {
+          this._handleValidation({
+            name,
+            value: !prevState.fields[name].checked
+          });
           return {
             fields: {
               ...prevState.fields,
@@ -64,25 +70,28 @@ const withFields = (config = {}) => BaseComponent =>
               }
             }
           };
-        }
-        const newValue = Array.isArray(prevState.fields[name].value)
-          ? prevState.fields[name].value.includes(value)
-            ? prevState.fields[name].value.filter(item => item !== value)
-            : [...prevState.fields[name].value, value]
-          : value;
-        return {
-          fields: {
-            ...prevState.fields,
-            [name]: {
-              ...prevState.fields[name],
-              touched: true,
-              value: newValue,
-              changed: newValue !== this._config.fields[name].value
+        });
+      } else {
+        this.setState(prevState => {
+          const newValue = Array.isArray(prevState.fields[name].value)
+            ? prevState.fields[name].value.includes(value)
+              ? prevState.fields[name].value.filter(item => item !== value)
+              : [...prevState.fields[name].value, value]
+            : value;
+          this._handleValidation({ name, value: newValue });
+          return {
+            fields: {
+              ...prevState.fields,
+              [name]: {
+                ...prevState.fields[name],
+                touched: true,
+                value: newValue,
+                changed: newValue !== this._config.fields[name].value
+              }
             }
-          }
-        };
-      });
-      this._handleValidation({ name, value });
+          };
+        });
+      }
     };
 
     _handleFieldFocus = e => {
