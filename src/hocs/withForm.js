@@ -81,7 +81,7 @@ const withFields = (config = {}) => BaseComponent =>
                 [name]: {
                   ...prevState.fields[name],
                   touched: true,
-                  checked: !checked,
+                  checked,
                   changed: checked !== this._config.fields[name].checked
                 }
               }
