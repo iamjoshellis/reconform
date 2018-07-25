@@ -30,8 +30,13 @@ const withFields = (config = {}) => BaseComponent =>
 
     state = setIntialState(this._config);
 
-    _handleValidation = async ({ name, value }) => {
+    _handleValidation = async ({ name }) => {
       if (this._config.fields[name] && this._config.fields[name].validator) {
+        const value =
+          ((this.state.fields[name].type === "checkbox" ||
+            this.state.fields[name].type === "radio") &&
+            this.state.fields[name].checked) ||
+          this.state.fields[name].value;
         const validation = await this._config.fields[name].validator(value, {
           ...this.props,
           ...this.state
@@ -50,35 +55,12 @@ const withFields = (config = {}) => BaseComponent =>
     };
 
     _handleFieldChange = e => {
-      const { name, value, type } = e.target;
-      if (type === "checkbox") {
-        this.setState(prevState => {
-          this._handleValidation({
-            name,
-            value: !prevState.fields[name].checked
-          });
-          return {
-            fields: {
-              ...prevState.fields,
-              [name]: {
-                ...prevState.fields[name],
-                touched: true,
-                checked: !prevState.fields[name].checked,
-                changed:
-                  !prevState.fields[name].checked !==
-                  this._config.fields[name].checked
-              }
-            }
-          };
-        });
-      } else {
-        this.setState(prevState => {
-          const newValue = Array.isArray(prevState.fields[name].value)
-            ? prevState.fields[name].value.includes(value)
-              ? prevState.fields[name].value.filter(item => item !== value)
-              : [...prevState.fields[name].value, value]
-            : value;
-          this._handleValidation({ name, value: newValue });
+      const { name, value, type, checked } = e.target;
+      this.setState(prevState => {
+        if (Array.isArray(prevState.fields[name].value)) {
+          const newValue = prevState.fields[name].value.includes(value)
+            ? prevState.fields[name].value.filter(item => item !== value)
+            : [...prevState.fields[name].value, value];
           return {
             fields: {
               ...prevState.fields,
@@ -90,30 +72,58 @@ const withFields = (config = {}) => BaseComponent =>
               }
             }
           };
-        });
-      }
+        }
+        if (type === "checkbox" || type === "radio") {
+          return {
+            fields: {
+              ...prevState.fields,
+              [name]: {
+                ...prevState.fields[name],
+                touched: true,
+                checked: !checked,
+                changed: checked !== this._config.fields[name].checked
+              }
+            }
+          };
+        }
+        return {
+          fields: {
+            ...prevState.fields,
+            [name]: {
+              ...prevState.fields[name],
+              touched: true,
+              value,
+              changed: value !== this._config.fields[name].value
+            }
+          }
+        };
+      }, this._handleValidation({ name }));
     };
 
     _handleFieldFocus = e => {
-      const { name, value } = e.target;
-      this.setState(prevState => ({
-        fields: {
-          ...prevState.fields,
-          [name]: { ...prevState.fields[name], focused: true }
-        }
-      }));
-      this._handleValidation({ name, value });
+      const { name } = e.target;
+      this.setState(
+        prevState => ({
+          fields: {
+            ...prevState.fields,
+            [name]: { ...prevState.fields[name], focused: true }
+          }
+        }),
+        this._handleValidation({ name })
+      );
     };
 
     _handleFieldBlur = e => {
       const { name, value } = e.target;
-      this.setState(prevState => ({
-        fields: {
-          ...prevState.fields,
-          [name]: { ...prevState.fields[name], focused: false, touched: true }
-        }
-      }));
-      this._handleValidation({ name, value });
+      this.setState(
+        prevState => ({
+          fields: {
+            ...prevState.fields,
+            [name]: { ...prevState.fields[name], focused: false, touched: true }
+          }
+        }),
+        this._handleValidation({ name, value })
+      );
     };
 
     _resetForm = newConfig => {
