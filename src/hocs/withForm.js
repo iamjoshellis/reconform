@@ -56,48 +56,51 @@ const withFields = (config = {}) => BaseComponent =>
 
     _handleFieldChange = e => {
       const { name, value, type, checked } = e.target;
-      this.setState(prevState => {
-        if (Array.isArray(prevState.fields[name].value)) {
-          const newValue = prevState.fields[name].value.includes(value)
-            ? prevState.fields[name].value.filter(item => item !== value)
-            : [...prevState.fields[name].value, value];
-          return {
-            fields: {
-              ...prevState.fields,
-              [name]: {
-                ...prevState.fields[name],
-                touched: true,
-                value: newValue,
-                changed: newValue !== this._config.fields[name].value
+      this.setState(
+        prevState => {
+          if (Array.isArray(prevState.fields[name].value)) {
+            const newValue = prevState.fields[name].value.includes(value)
+              ? prevState.fields[name].value.filter(item => item !== value)
+              : [...prevState.fields[name].value, value];
+            return {
+              fields: {
+                ...prevState.fields,
+                [name]: {
+                  ...prevState.fields[name],
+                  touched: true,
+                  value: newValue,
+                  changed: newValue !== this._config.fields[name].value
+                }
               }
-            }
-          };
-        }
-        if (type === "checkbox" || type === "radio") {
-          return {
-            fields: {
-              ...prevState.fields,
-              [name]: {
-                ...prevState.fields[name],
-                touched: true,
-                checked: !checked,
-                changed: checked !== this._config.fields[name].checked
-              }
-            }
-          };
-        }
-        return {
-          fields: {
-            ...prevState.fields,
-            [name]: {
-              ...prevState.fields[name],
-              touched: true,
-              value,
-              changed: value !== this._config.fields[name].value
-            }
+            };
           }
-        };
-      }, this._handleValidation({ name }));
+          if (type === "checkbox" || type === "radio") {
+            return {
+              fields: {
+                ...prevState.fields,
+                [name]: {
+                  ...prevState.fields[name],
+                  touched: true,
+                  checked: !checked,
+                  changed: checked !== this._config.fields[name].checked
+                }
+              }
+            };
+          }
+          return {
+            fields: {
+              ...prevState.fields,
+              [name]: {
+                ...prevState.fields[name],
+                touched: true,
+                value,
+                changed: value !== this._config.fields[name].value
+              }
+            }
+          };
+        },
+        () => this._handleValidation({ name })
+      );
     };
 
     _handleFieldFocus = e => {
@@ -109,7 +112,7 @@ const withFields = (config = {}) => BaseComponent =>
             [name]: { ...prevState.fields[name], focused: true }
           }
         }),
-        this._handleValidation({ name })
+        () => this._handleValidation({ name })
       );
     };
 
@@ -122,7 +125,7 @@ const withFields = (config = {}) => BaseComponent =>
             [name]: { ...prevState.fields[name], focused: false, touched: true }
           }
         }),
-        this._handleValidation({ name, value })
+        () => this._handleValidation({ name, value })
       );
     };
 
